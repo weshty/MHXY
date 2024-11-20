@@ -27,7 +27,7 @@ def resolution():  # 获取屏幕分辨率
 # 获取梦幻西游窗口信息吗，返回一个矩形窗口四个坐标
 def get_window_info():
     global handle
-    wdname = u'梦幻西游 - MuMu模拟器'
+    wdname = u'雷电模拟器-1'
     handle = win32gui.FindWindow(0, wdname)  # 获取窗口句柄
     if handle == 0:
         # text.insert('end', '提示：请打开梦幻西游\n')
@@ -68,7 +68,10 @@ def move_click(x, y, t=0):  # 移动鼠标并点击左键
 def findpng(Pngfile):
     global window_region
     myConfidence = 0.85
-    result = pyautogui.locateOnScreen('images\\'+Pngfile, region=window_region, confidence=myConfidence)
+    try:
+        result = pyautogui.locateOnScreen('images\\'+Pngfile, region=window_region, confidence=myConfidence)
+    except pyautogui.ImageNotFoundException:
+        print("ImageNotFoundException: Image could not be located. image:"+Pngfile)
     return result
 
 # 单击指定位置
@@ -158,20 +161,19 @@ def do_action():
 def shi_men(window_size):
     global is_start
     is_start = True
+    #师门任务不需要打开活动，直接在任务中就有
     open_huodong()
     if not get_rw("shimen_rw"):
         print("师门任务已完成")
         button_shimen["text"] = "师门（已完成）"
         return
+    #关闭活动
+    get_rw("shimen_qwc")
     button_shimen["text"] = "师门（执行中）"
+    time.sleep(1)
+    get_rw("shimen")
     while is_start:
-        flag = 0
-        if get_rw("shimen"):    # 师门
-            flag = 1
-            time.sleep(1)
-
-        result = do_action()
-        if findpng("renwu.png") is True and result == 0 and flag == 0:
+        if findpng("shimen_finish.png") is True:
             break
         time.sleep(1)
 
@@ -219,6 +221,15 @@ def bang_pai(window_size):
 def bao_tu(window_size):
     global is_start
     is_start = True
+    if findpng("baotu_1.png") is not None:
+        get_rw("baotu_1")
+        time.sleep(1)
+        print("宝图任务进行中")
+        button_baotu["text"] = "宝图（执行中）"
+        time.sleep(30)
+        button_baotu["text"] = "宝图（已完成）"
+        return
+
     open_huodong()
     if not get_rw("baotu_rw"):
         print("宝图任务已完成")
@@ -228,7 +239,7 @@ def bao_tu(window_size):
     get_rw("choice_do")     # 选择任务
     time.sleep(1)
     get_rw("baotu_1")     # 查找并点击宝图任务
-    time.sleep(1)
+    time.sleep(30)
     button_baotu["text"] = "宝图（已完成）"
 
 # 运镖任务
@@ -311,7 +322,7 @@ class MyThread(threading.Thread):
         self.func = func
         self.args = args
 
-        self.setDaemon(True)
+        self.daemon = True
         self.start()  # 在这里开始
 
     def run(self):
@@ -357,6 +368,10 @@ if __name__ == "__main__":
     button_zhuagui = tk.Button(root, text="带队抓鬼", command=lambda: MyThread(zhua_gui, window_size), width = 15,height = 2)
     button_zhuagui.place(relx=0.4, rely=0.65, width=100)
     button_zhuagui.pack()
+
+    button_yunbiao = tk.Button(root, text="运镖", command=lambda: MyThread(yun_biao, window_size), width=15, height=2)
+    button_yunbiao.place(relx=0.4, rely=0.65, width=100)
+    button_yunbiao.pack()
 
     button_quanbu = tk.Button(root, text="全部执行", command=lambda: MyThread(do_all), width = 15,height = 2)
     button_quanbu.place(relx=0.4, rely=0.65, width=100)
