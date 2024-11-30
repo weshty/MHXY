@@ -79,8 +79,8 @@ def resize_window(hwnd, new_width, height_ratio=0.79):
 
 
 # 找指定任务
-def findpng(Pngfile,window_size):
-    myConfidence = 0.80
+def findpng(Pngfile,window_size,myConfidence = 0.80):
+
     try:
         result = pyautogui.locateOnScreen('img\\'+Pngfile, region=get_window_region(window_size), confidence=myConfidence)
         return result
@@ -106,8 +106,8 @@ def click(x,y,window_size):
     pyautogui.moveTo(x=window_size[0]+10,y=window_size[1]+10,duration=0.1)  #鼠标移至窗口左上角
 
 # 接任务
-def get_rw(rwm,window_size):
-    pos=findpng(rwm+".png",window_size)
+def get_rw(rwm,window_size,myConfidence = 0.80):
+    pos=findpng(rwm+".png",window_size,myConfidence)
     print(rwm,pos)
     if pos is not None:
         click(pos[0]+pos[2]-6,pos[1]+pos[3]-6,window_size)

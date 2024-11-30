@@ -102,94 +102,83 @@ async def wa_baotu(name,window_size):
     if common.findpng("wabaotu_baotu.png",window_size) is not None:
         common.get_rw("wabaotu_baotu",window_size)
         await asyncio.sleep(3)
-        common.get_rw("wabaotu_shiyong",window_size)
-        print(f"{name}挖宝图进行中")
-        await asyncio.sleep(10)
-        index = 1
+        common.get_rw("wabaotu_shiyong", window_size)
         count = 0
-        while(is_start):
+        while(True):
 
-            if common.findpng("wabaotu_shiyong2.png",window_size) is not None:
+            print(f"{name}挖宝图进行中")
+            await asyncio.sleep(10)
+            while(common.findpng("zhandouzhong.png",window_size)) is not None:
+                print(f"{name}挖宝图战斗中")
+                await asyncio.sleep(5)
+            if common.findpng("wabaotu_shiyong2.png",window_size) is None:
                 count = count + 1
-                common.get_rw("wabaotu_shiyong2",window_size)
-                print(f"{name}挖宝图次数：{count}")
-                await asyncio.sleep(20)
-                index = 1
-                continue
-            if index == 6:
-                is_start = False
-            print(f"{name}未到达宝图地点：{index}")
-            await asyncio.sleep(20)
-            index = index + 1
+                print(f"{name}挖宝图进行中未找到使用{count}")
+            else:
+                print(f"{name}挖宝图点击使用")
+                common.get_rw("wabaotu_shiyong2", window_size)
+                count = 0
+            await asyncio.sleep(1)
+            if count > 3 :
+                break
+
     print(f"{name}挖宝图结束")
 
 
 async def mijing(name,window_size):
-    global is_start
-    is_start = True
     await asyncio.sleep(3)
-    i = 1
-    count = 1
+    name = name + "秘境"
     ##1、判断当前是否正在进行秘境降妖任务，存在这继续，不存在则打开活动
     # 1、打开活动找到秘境降妖任务，点击秘境降妖，选则任务，点击一江风，点击秘境任务
-    if common.get_rw("mijing_rw2",window_size) is False:
+    if common.findpng("mijing_rw2.png",window_size) is False:
         await asyncio.sleep(3)
+        print(f"{name}打开活动")
         common.get_rw("huodong",window_size)
         await asyncio.sleep(3)
+        print(f"{name}点击秘境任务")
         common.get_rw("mijing_rw",window_size)
-        await asyncio.sleep(2)
+        await asyncio.sleep(5)
+        print(f"{name}点击请选择")
         common.get_rw("qingxuanze_rw",window_size)
-        await asyncio.sleep(2)
+        await asyncio.sleep(3 )
+        print(f"{name}点击一江风")
         common.get_rw("mijing_yjf",window_size)
         await asyncio.sleep(2)
+        print(f"{name}点击挑战")
         common.get_rw("mijing_tz",window_size)
-        await asyncio.sleep(2)
+        await asyncio.sleep(3)
+        print(f"{name}点击秘境任务")
         common.get_rw("mijing_rw2", window_size)
-        while (i < 20):
-            print(f"{name}秘境任务进行中{i}")
-            await asyncio.sleep(60)
-            if common.findpng("zhandouzhong.png", window_size) is None:
-                count = count + 1
-                common.get_rw("qingxuanze_rw", window_size)
-                if common.findpng("mijing_sb.png", window_size) is not None:
-                    common.get_rw("mijing_sb", window_size)
-                    await asyncio.sleep(5)
-                    common.get_rw("mijing_lk", window_size)
-                    print(f"{name}秘境任务结束lk")
-                    break
-            else:
-                count = 1
-            i = i + 1
-            if count == 5:
-                i = 20
+
+        mijing_flag2(name, window_size)
         print(f"{name}秘境任务结束")
     else:
-        # 存在秘境任务则检查秘境任务是否完成，完成标准是失败或这通关
-        # 判断当前是否正在战斗中，不在战斗中统计3次，则表示完成，离开，否则继续循环60s
-        # 判断不在战斗中，是否在等待进入战斗中，是则点击进入战斗
-        while (i < 20):
-            print(f"{name}秘境任务进行中")
-            await asyncio.sleep(60)
-            if common.findpng("zhandouzhong.png",window_size) is None:
-                count = count + 1
-                common.get_rw("qingxuanze_rw", window_size)
-                if common.findpng("mijing_sb.png", window_size) is not None:
-                    common.get_rw("mijing_sb", window_size)
-                    await asyncio.sleep(5)
-                    common.get_rw("mijing_lk", window_size)
-                    print(f"{name}秘境任务结束离开")
-                    break
-
-            else:
-                count = 1
-            i = i + 1
-            if count == 5:
-                i = 20
-
-
-
+        mijing_flag2(name,window_size)
         print(f"{name}秘境任务结束")
 
+async def mijing_flag2(name,window_size):
+    print(f"{name}点击秘境任务")
+    common.get_rw("mijing_rw2", window_size)
+    await asyncio.sleep(3)
+    while (True):
+        print(f"{name}点击请选择")
+        if common.get_rw("qingxuanze_rw", window_size) is True:
+            await asyncio.sleep(5)
+        while (common.findpng("zhandouzhong.png", window_size) is not None):
+            print(f"{name}战斗中。。。")
+            await asyncio.sleep(30)
+        if common.findpng("mijing_sb.png", window_size) is not None:
+            print(f"{name}点击失败")
+            common.get_rw("mijing_sb", window_size)
+            await asyncio.sleep(5)
+            while (common.get_rw("mijing_sy", window_size) is not None):
+                print(f"{name}点击秘境使用")
+                await asyncio.sleep(5)
+
+            print(f"{name}点击离开")
+            common.get_rw("mijing_lk", window_size)
+            print(f"{name}秘境任务离开")
+            break
 
 
 
@@ -281,24 +270,56 @@ async def sanjie(name,window_size):
             i = i +1
         common.get_rw("sanjie_gb", window_size)
 
+async def qingkongbeibao(name,window_size):
+    print(f"{name} 打开包裹")
+    common.get_rw("baoguo",window_size)
+    await asyncio.sleep(3)
+    while common.findpng("jingtie.png",window_size) is not None:
+        print(f"{name} 点击精铁")
+        common.get_rw("jingtie",window_size)
+        await asyncio.sleep(2)
+        print(f"{name} 点击商会出售")
+        common.get_rw("shanghuichushou",window_size)
+        await asyncio.sleep(2)
+        print(f"{name} 点击出售")
+        common.get_rw("chushou",window_size)
+        await asyncio.sleep(2)
+
+    while common.findpng("zhizaoshu.png",window_size,0.5) is not None:
+        print(f"{name} 点击制造书")
+        common.get_rw("zhizaoshu",window_size,0.5)
+        await asyncio.sleep(2)
+        print(f"{name} 点击商会出售")
+        common.get_rw("shanghuichushou",window_size)
+        await asyncio.sleep(2)
+        print(f"{name} 点击出售")
+        common.get_rw("chushou",window_size)
+        await asyncio.sleep(2)
+    print(f"{name} 点击整理")
+    common.get_rw("zhengli",window_size)
+    print(f"{name} 点击关闭")
+    await asyncio.sleep(3)
+    common.get_rw("guanbi",window_size)
 
 def resolution():  # 获取屏幕分辨率
     return win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
 
 async def start_task(name,window_size):
-    print(f"{name}师门任务开始")
-    await shi_men(name,window_size)
-    print(f"{name}宝图任务开始")
-    await bao_tu(name,window_size)
+    # print(f"{name}师门任务开始")
+    # await shi_men(name,window_size)
+    # print(f"{name}宝图任务开始")
+    # await bao_tu(name,window_size)
     print(f"{name}挖宝图任务开始")
     await wa_baotu(name,window_size)
-    print(f"{name}秘境任务开始")
-    await mijing(name,window_size)
-    print(f"{name}三界任务开始")
-    await sanjie(name,window_size)
-    print(f"{name}运镖任务开始")
-    await yun_biao(name,window_size)
-    print(f"{name}所有任务结束")
+    print(f"{name}清空包裹开始")
+    await qingkongbeibao(name,window_size)
+    # print(f"{name}秘境任务开始")
+    # await mijing(name,window_size)
+    # print(f'{name}三界任务开始')
+    # await sanjie(name,window_size)
+    # print(f"{name}运镖任务开始")
+    # await yun_biao(name,window_size)
+    # print(f"{name}所有任务结束")
 
 
 # 启动
