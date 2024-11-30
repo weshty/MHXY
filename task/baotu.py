@@ -61,9 +61,55 @@ async def wa_baotu(window_size):
             print(f"未到达宝图地点：{index}")
             await asyncio.sleep(20)
             index = index + 1
-        print("挖宝图结束")
-        return
+    print("挖宝图结束")
+    return
 
+
+
+# 运镖任务
+def yun_biao(window_size):
+    is_start = True
+    # mhxy.button_yunbiao["text"] = "运镖（进行中）"
+    print("运镖（进行中）")
+    index = 1
+    count = 0
+    while count < 3:
+        common.open_huodong(window_size)
+        time.sleep(1)
+        if common.get_rw("yunbiao_rw",window_size):
+            count = count + 1
+            time.sleep(3)
+            common.get_rw("yasong",window_size)
+            time.sleep(3)
+            common.get_rw("yasong_qd",window_size)
+            time.sleep(30)
+        else:
+            index = index + 1
+            time.sleep(30)
+            if index > 3 :
+                count = 3
+
+    # mhxy.button_yunbiao["text"] = "运镖（已完成）"
+    print("运镖（已完成）")
+    return None
+
+# 抓鬼
+def zhua_gui(window_size,):
+    #创建队伍方式 1、打开活动，点击抓鬼任务，创建队伍，自动匹配，关闭窗口，点击抓鬼任务，等待10s,点击钟馗抓鬼任务
+    #匹配队伍 1、打开活动，点击抓鬼任务，自动匹配，关闭窗口，等待60s组队成功
+    # 循环判断当前是否在进行打鬼中，看是否找到任务，任务中有无抓鬼，等待次数，超过3次则退出组队，进行重新匹配
+
+    is_start = True
+    while is_start:
+        if common.findpng("renwu.png",window_size) and not common.get_rw("zhuogui",window_size):
+            print("打开活动")
+            common.open_huodong(window_size)
+            common.get_rw("zhuogui_rw",window_size)
+            common.get_rw("zudui",window_size)     # 自动组队
+            common.get_rw("guanbi",window_size)     # 关闭窗口
+            print("组队抓鬼")
+        time.sleep(60)
+    return
 
 def resolution():  # 获取屏幕分辨率
     return win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
@@ -78,23 +124,27 @@ if __name__ == "__main__":
     new_width = 600  # 新的宽度
     global is_start
     hwnd1,window_size1 = common.get_window_info(u'雷电模拟器')
-    hwnd2,window_size2 = common.get_window_info(u'雷电模拟器-1')
-    hwnd3,window_size3 = common.get_window_info(u'雷电模拟器-2')
+    # hwnd2,window_size2 = common.get_window_info(u'雷电模拟器-1')
+    # hwnd3,window_size3 = common.get_window_info(u'雷电模拟器-2')
+    #
+    # common.resize_window(hwnd1, new_width)
+    # common.resize_window(hwnd2, new_width)
+    # common.resize_window(hwnd3, new_width)
 
-    common.resize_window(hwnd1, new_width)
-    common.resize_window(hwnd2, new_width)
-    common.resize_window(hwnd3, new_width)
+    # yun_biao(window_size1)
+    zhua_gui(window_size1)
+
 
     # wa_baotu(window_size)
-    if window_size1 or window_size2 or window_size3:
-        print("异步任务")
-        async def main():
-            tasks = []
-            if window_size1:
-                tasks.append(asyncio.create_task(wa_baotu(window_size1)))
-            if window_size2:
-                tasks.append(asyncio.create_task(wa_baotu(window_size2)))
-            if window_size3:
-                tasks.append(asyncio.create_task(wa_baotu(window_size3)))
-            await asyncio.gather(*tasks)
-        asyncio.run(main())
+    # if window_size1 or window_size2 or window_size3:
+    #     print("异步任务")
+    #     async def main():
+    #         tasks = []
+    #         if window_size1:
+    #             tasks.append(asyncio.create_task(wa_baotu(window_size1)))
+    #         if window_size2:
+    #             tasks.append(asyncio.create_task(wa_baotu(window_size2)))
+    #         if window_size3:
+    #             tasks.append(asyncio.create_task(wa_baotu(window_size3)))
+    #         await asyncio.gather(*tasks)
+    #     asyncio.run(main())

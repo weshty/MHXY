@@ -7,17 +7,6 @@ import tkinter as tk
 import pyautogui
 import datetime
 
-#from PyQt5.QtWidgets import QApplication
-#from PyQt5.QtGui import *
-#import sys
-"""
-from pydoc import text
-from memory_pic import *
-from PIL import ImageGrab, Image
-import base64
-"""
-
-window_region=(0,0,800,600)
 
 def resolution():  # 获取屏幕分辨率
     return win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)

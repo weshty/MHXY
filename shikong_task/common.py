@@ -25,12 +25,39 @@ def get_window_info(wdname):
         print(f"window_size:{window_size}")
         return handle,window_size
 
+def get_windows(window_title):
+    """
+    获取指定窗口的句柄和当前矩形区域
+    :param window_title: 窗口标题
+    :return: 窗口的句柄、矩形区域 (left, top, right, bottom)
+    """
+    def enum_windows_callback(hwnd, windows):
+        if win32gui.IsWindowVisible(hwnd):
+            text = win32gui.GetWindowText(hwnd)
+            if text == window_title:
+                rect = win32gui.GetWindowRect(hwnd)
+                windows.append((hwnd, rect))
+
+    windows = []
+    win32gui.EnumWindows(enum_windows_callback, windows)
+
+    if windows:
+        # 如果有多个匹配的窗口，可以选择第一个或根据其他条件选择
+        return windows  # 返回第一个匹配的窗口
+    else:
+        return None
+
+def get_window_size(hwnd):
+    window_size = win32gui.GetWindowRect(hwnd)
+    print(f"window_size:{window_size}")
+    return window_size
+
 def get_window_region(window_size):
     window_region = (window_size[0], window_size[1], window_size[2] - window_size[0], window_size[3] - window_size[1])
     return window_region
 
 ##重置窗口大小
-def resize_window(hwnd, new_width, height_ratio=0.58):
+def resize_window(hwnd, new_width, height_ratio=0.79):
     """
     调整窗口大小，高度为宽度的指定比例
     :param hwnd: 窗口句柄
@@ -102,3 +129,20 @@ def open_huodong(window_size):
             break
         else:
             time.sleep(6)
+
+def get_window_center(window_size):
+    """
+    获取指定窗口的中心位置
+    :param window_title: 窗口标题
+    :return: 窗口的中心坐标 (x, y)
+    """
+    left, top, right, bottom = window_size
+    center_x = (left + right) // 2
+    center_y = (top + bottom) // 2
+    return center_x, center_y
+
+def get_move_to_scroll(center_x,center_y):
+    # 将鼠标移动到窗口中心
+    pyautogui.moveTo(center_x, center_y, duration=0.5)
+    # 使用滚轮向下滚动20距离
+    pyautogui.scroll(-20)
