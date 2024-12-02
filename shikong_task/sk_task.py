@@ -12,10 +12,31 @@ async def shi_men(name,window_size):
     is_start = True
     #师门任务不需要打开活动，直接在任务中就有
     #本脚本师门任务是基于5次基础已完成的情况触发
-    # common.open_huodong(window_size)
-    if not common.get_rw("shimen_rcrw",window_size):
-        print(f"{name}师门任务已完成")
-        return
+
+    if common.findpng("shimen_rcrw.png",window_size) is not None:
+        print(f"{name}点击师门日常任务")
+        if common.get_rw("shimen_rcrw",window_size) is True:
+            await asyncio.sleep(1)
+            print(f"{name}点击去完成")
+            common.get_rw("shimen_qwc",window_size)
+            await asyncio.sleep(1)
+            print(f"{name}请选择")
+            common.get_rw("qingxuanze", window_size)
+            await asyncio.sleep(1)
+            print(f"{name}点击任意位置(师门)")
+            common.get_rw("shimen_rw", window_size)
+            await asyncio.sleep(1)
+    print(f"{name}点击师门任务")
+    if common.get_rw("shimen_rw",window_size) is True:
+        await asyncio.sleep(5)
+        while(common.findpng("zhandouzhong.png",window_size) is not None):
+            print(f"{name}师门任务战斗中")
+            await asyncio.sleep(5)
+        while(common.get_rw("qingxuanzhe",window_size) is True):
+            print(f"{name}师门任务请选择")
+            await asyncio.sleep(5)
+        #todo 判断是否购买
+
     #关闭活动
     common.get_rw("shimen_qwc",window_size)
     print(f"{name}师门（执行中）")
