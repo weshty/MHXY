@@ -28,31 +28,42 @@ async def shi_men(name,window_size):
             await asyncio.sleep(1)
     print(f"{name}点击师门任务")
     if common.get_rw("shimen_rw",window_size) is True:
-        await asyncio.sleep(5)
-        while(common.findpng("zhandouzhong.png",window_size) is not None):
-            print(f"{name}师门任务战斗中")
+        while (True):
             await asyncio.sleep(5)
-        while(common.get_rw("qingxuanzhe",window_size) is True):
-            print(f"{name}师门任务请选择")
-            await asyncio.sleep(5)
-        #todo 判断是否购买
+            if(common.findpng("zhandouzhong.png",window_size) is not None):
+                print(f"{name}师门任务战斗中")
+                await asyncio.sleep(5)
+                continue
+            if(common.get_rw("qingxuanze_rw",window_size) is True):
+                print(f"{name}师门任务请选择")
+                await asyncio.sleep(5)
+                continue
+            if common.get_rw("shimen_goumai",window_size) is True:
+                print(f"{name}师门任务点击购买")
+                await asyncio.sleep(10)
+                if common.get_rw("qingxuanze_rw",window_size) is True:
+                    print(f"{name}师门任务点击请选择")
+                    await asyncio.sleep(3)
+                common.get_rw("shimen_sj",window_size)
+                print(f"{name}师门任务点击上交")
+                await asyncio.sleep(3)
+                common.get_rw("shimen_rw",window_size)
+                print(f"{name}师门任务点击任务")
+                continue
+            if common.get_rw("djrydf",window_size) is True:
+                print(f"{name}师门任务点击任意地方继续")
+                continue
+            if common.findpng("shimen_wc.png",window_size) is not None:
+                print(f"{name}师门任务完成")
+                common.get_rw("shimen_qd",window_size)
+                await asyncio.sleep(3)
+                print(f"{name}师门任务关闭")
+                common.get_rw("shimen_guanbi",window_size)
+                while common.get_rw("shimen_shiyong",window_size) is True:
+                    print(f"{name}师门任务奖励使用")
+                    await asyncio.sleep(3)
+                break
 
-    #关闭活动
-    common.get_rw("shimen_qwc",window_size)
-    print(f"{name}师门（执行中）")
-    await asyncio.sleep(3)
-    common.get_rw("shimen_rcrw",window_size)
-    await asyncio.sleep(3)
-    common.get_rw("shimen_rw", window_size)
-    while is_start:
-        print(f"{name}师门（执行中）")
-        if common.findpng("shimen_wc.png",window_size) is not None:
-            print(f"{name}师门任务已完成")
-            common.get_rw("shimen_qd", window_size)
-            await asyncio.sleep(2)
-            common.get_rw("shimen_guanbi", window_size)
-            break
-        await asyncio.sleep(20)
 
 # 宝图任务
 async def bao_tu(name,window_size):
@@ -69,13 +80,14 @@ async def bao_tu(name,window_size):
             return
         else:
             print(f"{name}宝图任务执行中")
-            await asyncio.sleep(5)
+            await asyncio.sleep(20)
             common.get_rw("qingxuanze_rw", window_size)  # 选择任务
             print(f"{name}宝图任务-选择任务执行中")
             await asyncio.sleep(1)
             common.get_rw("baotu_rc", window_size)  # 查找并点击宝图任务
             print(f"{name}宝图任务-查找并点击宝图任务")
-
+            await asyncio.sleep(1)
+            common.get_rw("baotu_rc", window_size)
 
             # 宝图任务进行中
             # 每隔60秒检查一次右侧任务栏是否存在宝图日常，且未在战斗中（天覆阵是否在使用）
@@ -326,21 +338,21 @@ def resolution():  # 获取屏幕分辨率
     return win32api.GetSystemMetrics(0), win32api.GetSystemMetrics(1)
 
 async def start_task(name,window_size):
-    # print(f"{name}师门任务开始")
-    # await shi_men(name,window_size)
+    print(f"{name}师门任务开始")
+    await shi_men(name,window_size)
     # print(f"{name}宝图任务开始")
     # await bao_tu(name,window_size)
-    print(f"{name}挖宝图任务开始")
-    await wa_baotu(name,window_size)
-    print(f"{name}清空包裹开始")
-    await qingkongbeibao(name,window_size)
+    # print(f"{name}挖宝图任务开始")
+    # await wa_baotu(name,window_size)
+    # print(f"{name}清空包裹开始")
+    # await qingkongbeibao(name,window_size)
     # print(f"{name}秘境任务开始")
     # await mijing(name,window_size)
     # print(f'{name}三界任务开始')
     # await sanjie(name,window_size)
     # print(f"{name}运镖任务开始")
     # await yun_biao(name,window_size)
-    # print(f"{name}所有任务结束")
+    print(f"{name}所有任务结束")
 
 
 # 启动
