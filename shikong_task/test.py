@@ -1,6 +1,7 @@
 import time
 
 import win32gui
+import common
 
 
 def get_window_info(window_title):
@@ -72,9 +73,13 @@ def main():
         rect = hwnd2[1]
         hwnd = hwnd2[0]
         if hwnd and rect:
-            new_width = 450  # 新的宽度
-            resize_window(hwnd, new_width)
-            print(f"窗口 {window_title} 的大小已调整为 {new_width} 像素宽，高度为 {int(new_width * 0.80)} 像素")
+            new_width = 500  # 新的宽度
+            common.resize_window(hwnd, new_width)
+            window_size = common.get_window_size(hwnd)
+            result = common.findpng("ditu.png",window_size)
+            common.click_at_offset(20,45,window_size)
+            print(f"地图 {result}" )
+            print(f"窗口 {window_size} 的大小")
             time.sleep(2)
         else:
             print(f"未找到标题为 '{window_title}' 的窗口")

@@ -57,7 +57,7 @@ def get_window_region(window_size):
     return window_region
 
 ##重置窗口大小
-def resize_window(hwnd, new_width, height_ratio=0.79):
+def resize_window(hwnd, new_width, height_ratio=0.8):
     """
     调整窗口大小，高度为宽度的指定比例
     :param hwnd: 窗口句柄
@@ -105,12 +105,26 @@ def click(x,y,window_size):
     move_click(x,y,0.1)
     pyautogui.moveTo(x=window_size[0]+10,y=window_size[1]+10,duration=0.1)  #鼠标移至窗口左上角
 
+
+def click_at_offset(x_offset, y_offset,window_size):
+    # 获取窗口的坐标
+    x, y = window_size[0] + x_offset, window_size[1] + y_offset
+
+    # 将鼠标移动到指定位置
+    win32api.SetCursorPos((x, y))
+
+    # 执行鼠标点击操作
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTDOWN, x, y, 0, 0)
+    time.sleep(0.1)  # 短暂等待以模拟人类点击
+    win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, x, y, 0, 0)
+
+
 # 接任务
 def get_rw(rwm,window_size,myConfidence = 0.80):
     pos=findpng(rwm+".png",window_size,myConfidence)
     print(rwm,pos)
     if pos is not None:
-        click(pos[0]+pos[2]-6,pos[1]+pos[3]-6,window_size)
+        click(pos[0]+pos[2]-3,pos[1]+pos[3]-3,window_size)
         time.sleep(0.5)
         return True
     else:
